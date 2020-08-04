@@ -50,9 +50,9 @@
 
 <body class="blue">
 
-<%--     <div class="container-fluid ">
+    <div class="container-fluid ">
         <%@ include file="nav2.jsp" %>
-    </div> --%>
+    </div> 
 
     <div class="row d-flex justify-content-center">
 
