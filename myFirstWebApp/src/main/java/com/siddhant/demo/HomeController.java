@@ -12,6 +12,9 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,33 +22,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.siddhant.demo.dao.EmployeeDao;
+import com.siddhant.demo.pojos.Employee;
+import com.siddhant.demo.service.EmployeeService;
+
 @Controller
 public class HomeController {
+	
+//	@Qualifier("Emp")
+
+	@Autowired
+	private EmployeeService e;
+	
 	String line="";
 	List<Employee> list=new ArrayList<>();
 	
 	@RequestMapping("/")
 	public String main(HttpServletRequest req) throws IOException {
 		BufferedReader br=new BufferedReader(new FileReader("src/main/resources/Data.csv"));
-		int count=0;
+		int count=1;
 //		req.getSession().setAttribute("SearchPatient", true);
 //		req.getSession().setAttribute("SearchPatientList", true);
 		//return "EmployeeSearch.jsp";
 		while((line=br.readLine())!=null) {
 			try {
 				String[] data=line.split(",");
-				list.add(new Employee(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[9],data[10],data[11],data[12],data[13],data[14]));
-				//System.out.println(data[0]);
+				Employee emp=new Employee(count,data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[9],data[10],data[11],data[12],data[13],data[14]);
+				//e.insertData(emp);		//To insert data from csv to db uncomment this line
+				//list.add(emp);
 				count++;
 				System.out.println(count);
 			}catch(ArrayIndexOutOfBoundsException e) {
 				break;
 			}
 		}
+		System.out.println(e.findByStartingWithGivenName("a"));
 		//return "FindEmployeeListByName.jsp";
 		return "Home.jsp";
 	}
 	
+	@RequestMapping("/send_createEmployee")
+	public void insertEmployeeInfoInDb(Employee employee, HttpServletRequest req, HttpServletResponse res)
+			throws IOException {
+		e.insertData(employee);
+		//req.getSession().setAttribute("CreatePatient", true);
+		res.sendRedirect("/");
+	}
+//---------------------------------end of db connectivity--------------------------//	
 	@RequestMapping("/writeData")
 	@ResponseBody
 	public String writeData(String name,String gender) throws IOException {
@@ -108,26 +131,11 @@ public class HomeController {
 	@RequestMapping("/searchEmployeeListByName")
 	@ResponseBody
 	public ModelAndView findEmployeeListByName(String name,HttpServletRequest req) throws IOException,ArrayIndexOutOfBoundsException {
-//		BufferedReader br=new BufferedReader(new FileReader("src/main/resources/Data.csv"));
-//		int count=0;
+
 		List<Employee> myList=new ArrayList<>();
 		myList.clear();
-		//list.clear();
-		//System.out.println(br.readLine());
 		ModelAndView mv=new ModelAndView();
 		mv.setViewName("FindEmployeeListByName.jsp");
-		//String name="anish";
-//		while((line=br.readLine())!=null) {
-//			try {
-//				String[] data=line.split(",");
-//				list.add(new Employee(data[0],data[1],data[2],data[3],data[4],data[5],data[6],data[7],data[9],data[10],data[11],data[12],data[13],data[14]));
-//				//System.out.println(data[0]);
-//				count++;
-//				System.out.println(count);
-//			}catch(ArrayIndexOutOfBoundsException e) {
-//				break;
-//			}
-//		}
 		
 		for(Employee e:list) {
 			if(e.getName().toLowerCase().startsWith(name.toLowerCase())) {

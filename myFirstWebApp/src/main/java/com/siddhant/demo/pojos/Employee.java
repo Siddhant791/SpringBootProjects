@@ -1,7 +1,19 @@
-package com.siddhant.demo;
+package com.siddhant.demo.pojos;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import org.springframework.stereotype.Component;
+
+//@Component
+@Entity
 public class Employee {
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	private int id;
 	private String name;
 	private String gender;
 	private String phone;
@@ -17,11 +29,14 @@ public class Employee {
 	private String other;
 	private String offered;
 	
-	
-	public Employee(String name, String gender, String phone, String qualification, String district, String state,
-			String canSpeakEnglish, String workedBefore, String discDate, String action, String drivingLicence,
-			String bike, String other, String offered) {
+	public Employee() {
+		
+	}
+	public Employee(int id, String name, String gender, String phone, String qualification, String district,
+			String state, String canSpeakEnglish, String workedBefore, String discDate, String action,
+			String drivingLicence, String bike, String other, String offered) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.gender = gender;
 		this.phone = phone;
@@ -36,6 +51,12 @@ public class Employee {
 		this.bike = bike;
 		this.other = other;
 		this.offered = offered;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
 	}
 	public String getName() {
 		return name;
@@ -123,12 +144,14 @@ public class Employee {
 	}
 	@Override
 	public String toString() {
-		return "Employee [name=" + name + ", gender=" + gender + ", phone=" + phone + ", qualification=" + qualification
-				+ ", district=" + district + ", state=" + state + ", canSpeakEnglish=" + canSpeakEnglish
+		return "Employee [id=" + id + ", name=" + name + ", gender=" + gender + ", phone=" + phone + ", qualification="
+				+ qualification + ", district=" + district + ", state=" + state + ", canSpeakEnglish=" + canSpeakEnglish
 				+ ", workedBefore=" + workedBefore + ", discDate=" + discDate + ", action=" + action
 				+ ", drivingLicence=" + drivingLicence + ", bike=" + bike + ", other=" + other + ", offered=" + offered
 				+ "]";
 	}
+	
+	
 	
 	
 }
